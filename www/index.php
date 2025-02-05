@@ -213,7 +213,7 @@ $conn->close();
         <?php endif; ?>
     <?php else: ?>
         <div id="loginForm">
-            <h2>Login</h2>
+            <h2>Login SRE</h2>
             <div class="inputs">
                 <form method="POST">
                     <input type="text" name="email" placeholder="Email" required>
