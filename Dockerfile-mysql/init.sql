@@ -16,4 +16,3 @@ INSERT INTO data_sre (email, password, dev)
 VALUES ('admin', '12345', 'Warley M. Araujo'),
        ('war', '12345', 'Warley M. Araujo'),
        ('warleyfirefox@gmail.com', '12345', 'Warley M. Araujo');
-

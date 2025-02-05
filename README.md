@@ -1,5 +1,3 @@
-key: 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
-
 # Sistema de Login e Cadastro PHP
 
 Este é um sistema simples de login e cadastro feito em PHP, utilizando um banco de dados MySQL.
