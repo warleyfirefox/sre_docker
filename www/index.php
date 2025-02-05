@@ -59,6 +59,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
     }
 }
 
+// Exibir tabela para o usuário "admin"
+if ($login_sucesso && $email === "admin" && $password === "12345") {
+    $query = "SELECT * FROM data_sre";
+    $result = $conn->query($query);
+    $tabela_html = "<h2>Tabela de Usuários</h2><table border='1'><tr><th>ID</th><th>Email</th><th>Nome</th><th>Senha</th></tr>";
+    while ($row = $result->fetch_assoc()) {
+        $tabela_html .= "<tr><td>{$row['id']}</td><td>{$row['email']}</td><td>{$row['dev']}</td><td>{$row['password']}</td></tr>";
+    }
+    $tabela_html .= "</table>";
+}
+
 $conn->close();
 ?>
 
@@ -70,14 +81,32 @@ $conn->close();
     <title>Login</title>
     <style>
 
+        table {
+            width: 100%;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            border-collapse: collapse;
+            border: 2px solid white;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        tr:hover {
+            background-color: #E0EFFF;
+        }
         body {
-            font-family: Arial,
-            sans-serif;
+            font-family: Arial, sans-serif;
             background-color: #f4f4f4;
         }
-
         .container {
-            max-width: 400px;
+            max-width: 600px;
             margin: 100px auto;
             padding: 20px;
             background: white;
@@ -85,54 +114,82 @@ $conn->close();
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
-
         .inputs {
             margin-right: 20px;
         }
-
-        input[type="text"], input[type="password"] { width: 100%;
+        input[type="text"], input[type="password"] {
+            width: 100%;
             padding: 10px;
             margin: 10px 0;
             border-radius: 5px;
             border: 1px solid #ccc;
         }
-
         input[type="submit"] {
-        	width: 100%;
-        	padding: 10px;
-        	background: #4CAF50;
-        	color: white;
-        	border: none;
-        	border-radius: 5px;
-        	cursor: pointer;
-        	margin-right: -22px;
+            width: 100%;
+            padding: 10px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: -22px;
         }
-
         input[type="submit"]:hover {
             background: #45a049;
         }
-
         .error {
             color: red;
         }
-
         .success {
             color: green;
             font-weight: bold;
         }
 
         .register-link {
-        	font-size: 15px;
-        	color: blue;
-        	text-align: right;
-        	display: block;
-        	cursor: pointer;
-        	margin-bottom: 5px;
-        	margin-right: -10px;
+            font-size: 15px;
+            color: blue;
+            text-align: right;
+            cursor: pointer;
+            margin-right: -20px;
         }
 
-    </style>
+        .back-link {
+            font-size: 15px;
+            color: blue;
+            text-align: right;
+            cursor: pointer;
+            margin-right: 10px;
+        }
 
+        .back-login{
+            width: 29%;
+            padding: 10px;
+            background: #008aff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-top: 14px;
+        }
+
+        .back-login:hover {
+            background: #007BFF;
+
+        }
+
+        .btn-voltar {
+            width: 29%;
+            padding: 10px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-top: 14px;
+        }
+    </style>
     <script>
         function toggleForm(showRegister) {
             document.getElementById('loginForm').style.display = showRegister ? 'none' : 'block';
@@ -144,38 +201,58 @@ $conn->close();
 
 <div class="container">
     <?php if ($login_sucesso): ?>
-    <h2>Bem-vindo, <?php echo htmlspecialchars($nome_usuario); ?>!</h2>
-    <form method="POST">
-        <button type="submit">Voltar ao Login</button>
-    </form>
+        <?php if ($email === "admin" && $password === "12345"): ?>
+            <h2>Bem-vindo, Admin!</h2>
+            <?php echo $tabela_html; ?>
+            <button onclick="history.back()" class="btn-voltar">Voltar</button>
+        <?php else: ?>
+            <h2>Bem-vindo, <?php echo htmlspecialchars($nome_usuario); ?>!</h2>
+            <form method="POST">
+                <button class="back-login" type="submit">Voltar ao Login</button>
+            </form>
+        <?php endif; ?>
     <?php else: ?>
-    <div id="loginForm">
-        <h2>Login</h2>
-        <div class="inputs">
-            <form method="POST">
-                <input type="text" name="email" placeholder="Email" required>
-                <input type="password" name="password" placeholder="Senha" required>
-                <span class="register-link" onclick="toggleForm(true)">Cadastro</span>
-                <input type="submit" value="Entrar">
-            </form>
+        <div id="loginForm">
+            <h2>Login</h2>
+            <div class="inputs">
+                <form method="POST">
+                    <input type="text" name="email" placeholder="Email" required>
+                    <input type="password" name="password" placeholder="Senha" required>
+                    <div style="width: 100%; margin-bottom: 9px; text-align: right;">
+                        <span class="register-link" onclick="toggleForm(true)">Cadastro</span>
+                    </div>
+                    <input type="submit" value="Entrar">
+                </form>
+            </div>
         </div>
-    </div>
 
-    <div id="registerForm" style="display: none;">
-        <h2>Cadastro</h2>
-        <div class="inputs">
-            <form method="POST">
-                <input type="text" name="name" placeholder="Nome" required>
-                <input type="text" name="email" placeholder="Email" required>
-                <input type="password" name="password" placeholder="Senha" required>
-                <input type="password" name="confirm_password" placeholder="Confirme a Senha" required>
-                <input type="hidden" name="register" value="1">
-                <input type="submit" value="Cadastrar">
-            </form>
+        <div id="registerForm" style="display: none;">
+            <h2>Cadastro</h2>
+            <div class="inputs">
+                <form method="POST">
+                    <input type="text" name="name" placeholder="Nome" required>
+                    <input type="text" name="email" placeholder="Email" required>
+                    <input type="password" name="password" placeholder="Senha" required>
+                    <input type="password" name="confirm_password" placeholder="Confirme a Senha" required>
+                    <input type="hidden" name="register" value="1">
+                    <input type="submit" value="Cadastrar">
+                </form>
+            </div>
+            <div style="width: 100%; margin-top: 12px; text-align: right;">
+                <span class="back-link" onclick="toggleForm(false)">Voltar ao Login</span>
+            </div>
         </div>
-        <span class="register-link" onclick="toggleForm(false)">Voltar ao Login</span>
-    </div>
-    <?php echo $msg; ?>
+        <?php
+            if ($msg !== "") {
+                echo "<p id='msg'>$msg</p>"; // Exibir a mensagem
+                echo "<script>
+                    setTimeout(function() {
+                        window.location.href = window.location.pathname;
+                    }, 1500);
+                </script>";
+            }
+        ?>
+
     <?php endif; ?>
 </div>
 

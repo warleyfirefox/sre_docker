@@ -13,5 +13,7 @@ CREATE TABLE IF NOT EXISTS data_sre (
 
 -- Inserção de dados iniciais
 INSERT INTO data_sre (email, password, dev)
-VALUES ('warleyfirefox@gmail.com', 'wma12345', 'Warley M. Araujo'),
-       ('war', '12345', 'Warley M. Araujo');
+VALUES ('admin', '12345', 'Warley M. Araujo'),
+       ('war', '12345', 'Warley M. Araujo'),
+       ('warleyfirefox@gmail.com', '12345', 'Warley M. Araujo');
+
